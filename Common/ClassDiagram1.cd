@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="Common.D3DApplicationBase">
+    <Position X="8.25" Y="4.75" Width="3.75" />
+    <Members>
+      <Field Name="_backBuffer" Hidden="true" />
+      <Field Name="_bitmapTarget" Hidden="true" />
+      <Field Name="_depthBuffer" Hidden="true" />
+      <Field Name="_depthStencilView" Hidden="true" />
+      <Field Name="_deviceManager" Hidden="true" />
+      <Field Name="_renderTargetView" Hidden="true" />
+      <Field Name="_swapChain" Hidden="true" />
+      <Property Name="Bounds" Hidden="true" />
+      <Method Name="Dispose" Hidden="true" />
+      <Property Name="RenderTargetBounds" Hidden="true" />
+      <Property Name="RenderTargetSize" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>EJAAIAEgBCBFARkCAAAiAFAAAIACAIBKABBAAAABAwI=</HashCode>
+      <FileName>D3DApplicationBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common.D3DApplicationDesktop">
+    <Position X="12.25" Y="8.75" Width="3.5" />
+    <Members>
+      <Field Name="_window" Hidden="true" />
+      <Method Name="Window_SizeChanged" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAgAAAAAAAIAAAAAAAAAAAAAIAAAACEAAAAA=</HashCode>
+      <FileName>D3DApplicationDesktop.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common.DeviceManager">
+    <Position X="12.25" Y="4.75" Width="3" />
+    <Members>
+      <Field Name="d2dContext" Hidden="true" />
+      <Field Name="d2dDevice" Hidden="true" />
+      <Field Name="d2dFactory" Hidden="true" />
+      <Field Name="d3dContext" Hidden="true" />
+      <Field Name="d3dDevice" Hidden="true" />
+      <Field Name="Direct3DFeatureLevels" Hidden="true" />
+      <Field Name="dpi" Hidden="true" />
+      <Field Name="dwriteFactory" Hidden="true" />
+      <Field Name="wicFactory" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AADABBBAAAAAAQgBAAAIgAgAAAACCAAACEQAAkAkAAA=</HashCode>
+      <FileName>DeviceManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common.FpsRenderer">
+    <Position X="9" Y="0.5" Width="2.25" />
+    <Members>
+      <Field Name="clock" Hidden="true" />
+      <Method Name="DoRender" Hidden="true" />
+      <Field Name="frameCount" Hidden="true" />
+      <Method Name="Initialize" Hidden="true" />
+      <Field Name="MAXSAMPLES" Hidden="true" />
+      <Field Name="tickindex" Hidden="true" />
+      <Field Name="ticklist" Hidden="true" />
+      <Field Name="ticksum" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>IAAAAAQAAAAAAQAAAEEAAAAAAAAAgAAACCACAAAAAAA=</HashCode>
+      <FileName>FpsRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common.RendererBase">
+    <Position X="3.75" Y="0.5" Width="3" />
+    <Members>
+      <Field Name="_renderContext" Hidden="true" />
+      <Method Name="DeviceManager_OnInitialize" Hidden="true" />
+      <Method Name="Target_OnSizeChanged" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AIAAAAEgABAAAQACAAAAACAAAQAEgAAIABAAgAAAAAA=</HashCode>
+      <FileName>RendererBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Common.TextRenderer">
+    <Position X="7" Y="0.5" Width="1.75" />
+    <Members>
+      <Field Name="color" Hidden="true" />
+      <Method Name="CreateDeviceDependentResources" Hidden="true" />
+      <Field Name="font" Hidden="true" />
+      <Field Name="lineLength" Hidden="true" />
+      <Field Name="sceneColorBrush" Hidden="true" />
+      <Field Name="textFormat" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAIAAAAAAAQAgAACACIAAAAAAAAAgACAAAAADAAAAAA=</HashCode>
+      <FileName>TextRenderer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,112 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Justin Stenning - 2013-06-10: Modified to support C# projects
+Original file: C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\Extensions\Microsoft\VsGraphics\MeshContentTask.targets
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import
+    Project=".\MeshContentTask.props" />
+
+  <ItemGroup>
+    <AvailableItemName Include="MeshContentTask">
+      <Targets>_MeshContentTask</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <UsingTask TaskName="Microsoft.VisualStudio.Graphics.Api.MeshContentTask" AssemblyFile="C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+
+  <!-- Inject a custom target into Build by extending BuildDependsOn -->
+  <PropertyGroup>
+    <BuildDependsOn>$(BuildDependsOn);MakeDirsForMeshContentTask</BuildDependsOn>
+  </PropertyGroup>
+
+  <!-- Makes the the directories that the task uses -->
+  <Target Name="MakeDirsForMeshContentTask">
+    <ItemGroup Condition="'@(MeshContentTask)'!=''">
+      <MeshContentOutputs Include="@(MeshContentTask->Metadata('ContentOutput')->Distinct())">
+        <DeploymentContent>True</DeploymentContent>
+      </MeshContentOutputs>
+      <MeshContentTaskDirsToMake Include="@(MeshContentOutputs->DirectoryName())" />
+      <MeshContentOutputs>
+        <Link Condition="'%(MeshContentOutputs.DeploymentContent)'=='True'">$([MSBuild]::MakeRelative($(TargetDir), %(FullPath)))</Link>
+      </MeshContentOutputs>
+
+      <None Include="@(MeshContentOutputs);" />
+
+    </ItemGroup>
+
+    <MakeDir Directories="@(MeshContentTaskDirsToMake)" />
+
+    <ItemGroup>
+      <MeshContentTaskDirsToMake Remove="@(MeshContentTaskDirsToMake)" />
+    </ItemGroup>
+  </Target>
+
+  <!-- Inject a custom target into Clean by extending CleanDependsOn -->
+  <PropertyGroup>
+    <CleanDependsOn>
+	$(CleanDependsOn);
+	CustomAfterClean
+    </CleanDependsOn>
+  </PropertyGroup> 
+
+  <!-- Clean the generated output files -->
+  <Target Name="CustomAfterClean" DependsOnTargets="MakeDirsForMeshContentTask">
+    <Delete Files="%(MeshContentTask.ContentOutput)" />
+  </Target>
+
+  <!-- Inject a custom target into Build by extending BuildDependsOn -->
+  <PropertyGroup>
+    <BuildDependsOn>
+      $(BuildDependsOn);_MeshContentTask
+    </BuildDependsOn>
+  </PropertyGroup>
+
+  <Target
+    Name="_MeshContentTask"
+    BeforeTargets="$(MeshContentTaskBeforeTargets)"
+    AfterTargets="$(MeshContentTaskAfterTargets)"
+    Condition="'@(MeshContentTask)' != ''"
+    DependsOnTargets="MakeDirsForMeshContentTask">
+
+    <Message
+      Importance="High"
+      Text="%(MeshContentTask.Identity)" 
+    />
+
+    <MeshContentTask
+        Condition                    = "'@(MeshContentTask)' != '' and '%(MeshContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '12.0'"
+        Source                       = "%(MeshContentTask.Identity)"
+        ContentOutput                = "%(MeshContentTask.ContentOutput)"
+        TLogDir                      = "$(TLogLocation)"
+        IsDebugBuild                 = "$(UseDebugLibraries)"
+        >
+
+      <Output TaskParameter="AdditionalExportedFiles" ItemName="ExportedFiles" />
+
+    </MeshContentTask>
+    <MeshContentTask
+        Condition                    = "'@(MeshContentTask)' != '' and '%(MeshContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '11.0'"
+        Source                       = "%(MeshContentTask.Identity)"
+        ContentOutput                = "%(MeshContentTask.ContentOutput)"
+        IntermediateDir 	         = "$(ProjectDir)obj\$(ConfigurationName)"
+        >
+
+      <Output TaskParameter="AdditionalExportedFiles" ItemName="ExportedFiles" />
+
+    </MeshContentTask>
+	
+    <ItemGroup>
+      <ExportedFiles>
+        <DeploymentContent>True</DeploymentContent>
+      </ExportedFiles>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="@(ExportedFiles);" />
+    </ItemGroup>
+
+  </Target>
+
+</Project>

@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Justin Stenning - 2013-06-10: Modified to support C# projects
+Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\VsGraphics\ShaderGraphContentTask.targets
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <Import
+    Project=".\ShaderGraphContentTask.props" />
+
+  <ItemGroup>
+    <AvailableItemName Include="ShaderGraphContentTask">
+      <Targets>_ShaderGraphContentTask</Targets>
+    </AvailableItemName>
+  </ItemGroup>
+
+  <UsingTask TaskName="Microsoft.VisualStudio.Graphics.Api.ShaderGraphContentTask" AssemblyFile="C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+
+  <PropertyGroup>
+    <BuildDependsOn>$(BuildDependsOn);MakeDirsForShaderGraphContentTask</BuildDependsOn>
+  </PropertyGroup>
+
+  <!-- Makes the the directories that the task uses -->
+  <Target Name="MakeDirsForShaderGraphContentTask">
+
+    <ItemGroup Condition="'@(ShaderGraphContentTask)'!=''">
+      <ShaderGraphContentOutputs Include="@(ShaderGraphContentTask->Metadata('ContentOutput')->Distinct())">
+        <DeploymentContent>True</DeploymentContent>
+      </ShaderGraphContentOutputs>
+      <ShaderGraphContentTaskDirsToMake Include="@(ShaderGraphContentTask->DirectoryName())" />
+      <ShaderGraphContentOutputs>
+        <Link Condition="'%(ShaderGraphContentOutputs.DeploymentContent)'=='True'">$([MSBuild]::MakeRelative($(TargetDir), %(FullPath)))</Link>
+      </ShaderGraphContentOutputs>
+
+      <None Include="@(ShaderGraphContentOutputs);" />
+    </ItemGroup>
+
+    <MakeDir Directories="@(ShaderGraphContentTaskDirsToMake)" />
+
+    <ItemGroup>
+      <ShaderGraphContentTaskDirsToMake Remove="@(ShaderGraphContentTaskDirsToMake)" />
+    </ItemGroup>
+
+  </Target>
+
+
+  <!-- Inject a custom target into Clean by extending CleanDependsOn -->
+  <PropertyGroup>
+        <CleanDependsOn>
+            $(CleanDependsOn);
+            CustomAfterClean
+        </CleanDependsOn>
+   </PropertyGroup>
+
+    <!-- Clean the generated output files -->
+    <Target Name="CustomAfterClean" DependsOnTargets="MakeDirsForShaderGraphContentTask">
+        <Delete Files="%(ShaderGraphContentTask.ContentOutput)" />
+    </Target>
+    
+  <Target
+    Name="_ShaderGraphContentTask"
+    BeforeTargets="$(ShaderGraphContentTaskBeforeTargets)"
+    AfterTargets="$(ShaderGraphContentTaskAfterTargets)"
+    Condition="'@(ShaderGraphContentTask)' != ''"
+    DependsOnTargets="MakeDirsForShaderGraphContentTask">
+
+    <Message
+      Importance="High"
+      Text="%(ShaderGraphContentTask.Identity)" />
+    <ShaderGraphContentTask
+        Condition                    = "'@(ShaderGraphContentTask)' != '' and '%(ShaderGraphContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '12.0'"
+        Source                       = "%(ShaderGraphContentTask.Identity)"
+        ContentOutput                = "%(ShaderGraphContentTask.ContentOutput)"
+        TLogDir                      = "$(ProjectDir)obj\$(ConfigurationName)"
+        IsDebugBuild                 = "$(UseDebugLibraries)"
+      />
+    <ShaderGraphContentTask
+        Condition                    = "'@(ShaderGraphContentTask)' != '' and '%(ShaderGraphContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '11.0'"
+        Source                       = "%(ShaderGraphContentTask.Identity)"
+        ContentOutput                = "%(ShaderGraphContentTask.ContentOutput)"
+        IntermediateDir 	     = "$(ProjectDir)obj\$(ConfigurationName)"
+      />
+  </Target>
+
+</Project>

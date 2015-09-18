@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Justin Stenning - 2013-06-10: Modified to support C# projects
+Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\VsGraphics\ShaderGraphContentTask.props
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(ShaderGraphContentTaskBeforeTargets)' == '' and '$(ShaderGraphContentTaskAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <ShaderGraphContentTaskBeforeTargets>Build</ShaderGraphContentTaskBeforeTargets>
+    <ShaderGraphContentTaskAfterTargets>CustomBuild</ShaderGraphContentTaskAfterTargets>
+  </PropertyGroup>
+
+
+  <ItemDefinitionGroup>
+    <ShaderGraphContentTask>
+      <!--Enter Defaults Here-->
+      <ContentOutput Condition="'%(ShaderGraphContentTask.ContentOutput)' == '' and !$(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)%(RelativeDir)%(Filename).cso</ContentOutput>
+      <ContentOutput Condition="'%(ShaderGraphContentTask.ContentOutput)' == '' and $(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)AppX\%(RelativeDir)%(Filename).cso</ContentOutput>
+    </ShaderGraphContentTask>
+  </ItemDefinitionGroup>
+
+</Project>

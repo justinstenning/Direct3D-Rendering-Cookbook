@@ -1,0 +1,5 @@
+commit 7826a49fd930f97a58fffe1f5916f60c01dfe54d
+Author: Alexandre Mutel <alexandre_mutel@yahoo.fr>
+Date:   Sun May 5 09:17:44 2013 +0000
+
+    [Samples] Add Direct3D11.1 ScreenCapture sample using DXGI OutputDuplication

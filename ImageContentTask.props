@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Justin Stenning - 2013-06-10: Modified to support C# projects
+Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\VsGraphics\ImageContentTask.props
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(ImageContentTaskBeforeTargets)' == '' and '$(ImageContentTaskAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <ImageContentTaskBeforeTargets>Build</ImageContentTaskBeforeTargets>
+    <ImageContentTaskAfterTargets>CustomBuild</ImageContentTaskAfterTargets>
+  </PropertyGroup>
+
+
+  <ItemDefinitionGroup>
+    <ImageContentTask>
+      <!--Enter Defaults Here-->
+      <ContentOutput Condition="'%(ImageContentTask.ContentOutput)' == '' and !$(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)%(RelativeDir)%(Filename).dds</ContentOutput>
+      <ContentOutput Condition="'%(ImageContentTask.ContentOutput)' == '' and $(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)AppX\%(RelativeDir)%(Filename).dds</ContentOutput>
+    </ImageContentTask>
+  </ItemDefinitionGroup>
+
+</Project>

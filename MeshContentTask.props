@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Justin Stenning - 2013-06-10: Modified to support C# projects
+Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\Extensions\Microsoft\VsGraphics\MeshContentTask.props
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup Condition="'$(MeshContentTaskBeforeTargets)' == '' and '$(MeshContentTaskAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <MeshContentTaskBeforeTargets>Build</MeshContentTaskBeforeTargets>
+    <MeshContentTaskAfterTargets>CustomBuild</MeshContentTaskAfterTargets>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup>
+    <MeshContentTask>
+      <!--Enter Defaults Here-->
+      <ContentOutput Condition="'%(MeshContentTask.ContentOutput)' == '' and !$(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)%(RelativeDir)%(Filename).cmo</ContentOutput>
+      <ContentOutput Condition="'%(MeshContentTask.ContentOutput)' == '' and $(DefineConstants.Contains('NETFX_CORE'))">$(OutDir)AppX\%(RelativeDir)%(Filename).cmo</ContentOutput>
+    </MeshContentTask>
+  </ItemDefinitionGroup>
+
+</Project>

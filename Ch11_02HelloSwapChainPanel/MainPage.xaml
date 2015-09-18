@@ -1,0 +1,23 @@
+﻿<Page
+    x:Class="Ch11_02HelloSwapChainPanel.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Ch11_02HelloSwapChainPanel"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" HorizontalAlignment="Stretch" Width="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <StackPanel HorizontalAlignment="Left" Height="68" VerticalAlignment="Top" Width="289" Margin="334,240,0,0" Background="#FFB04A4A">
+            <TextBlock HorizontalAlignment="Left" Height="64" TextWrapping="Wrap" Text="Background Element" VerticalAlignment="Top" Width="289" FontSize="26.667" Foreground="White" TextAlignment="Center"/>
+        </StackPanel>
+
+        <ScrollViewer ZoomMode="Enabled" MaxZoomFactor="8" HorizontalScrollMode="Enabled" HorizontalScrollBarVisibility="Visible" RenderTransformOrigin="0.5,0.5">
+            <local:D3DPanel Grid.Column="1" Height="800" Width="800" />
+        </ScrollViewer>
+    </Grid>
+</Page>
