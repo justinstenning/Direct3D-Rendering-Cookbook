@@ -42,7 +42,7 @@ Shared Projects:
   `.\Common.WinRT\Common.WinRT.csproj`
 
 *****************************************
-Chapter 1 Projects:
+Chapter 1 projects: *Getting Started with Direct3D*
 -----------------------------------------
 
 * Building a Direct3D 11 application with C# and SharpDX
@@ -59,7 +59,7 @@ Chapter 1 Projects:
 
 *****************************************
 -----------------------------------------
-Chapter 2 Projects:
+Chapter 2 projects: *Rendering with Direct3D*
 -----------------------------------------
 * Building a simple rendering framework
 
@@ -74,7 +74,7 @@ Chapter 2 Projects:
   `.\Ch02_02AddingTexture\`
 
 *****************************************
-Chapter 3 Projects:
+Chapter 3 projects: *Rendering Meshes*
 -----------------------------------------
 * Cube and Sphere
 
@@ -93,7 +93,7 @@ Chapter 3 Projects:
   `.\Ch03_03LoadMesh\`
 
 *****************************************
-Chapter 4 Projects:
+Chapter 4 projects: *Animating Meshes with Vertex Skinning*
 -----------------------------------------
 * Vertex Skinning
 
@@ -104,7 +104,7 @@ Chapter 4 Projects:
   `.\Ch04_02Animate\`
 
 *****************************************
-Chapter 5 Projects:
+Chapter 5 projects: *Applying Hardware Tessellation*
 -----------------------------------------
 * Tessellation basics
 
@@ -115,7 +115,7 @@ Chapter 5 Projects:
   `.\Ch05_02TessellatedMesh\`
 
 *****************************************
-Chapter 6 Projects:
+Chapter 6 projects: *Adding Surface Detail with Normal and Displacement Mapping*
 -----------------------------------------
 * Displacement Mapping
 
@@ -128,14 +128,14 @@ Chapter 6 Projects:
   `.\Ch06_02DisplacementDecals\`
 
 *****************************************
-Chapter 7 Projects:
+Chapter 7 projects: *Performing Image Processing Techniques*
 -----------------------------------------
 * Image processing (compute shaders)
 
   `.\Ch07_01ImageProcessing\`
 
 *****************************************
-Chapter 8 Projects:
+Chapter 8 projects: *Incorporating Physics and Simulations*
 -----------------------------------------
 * Physics (with BulletSharp)
 
@@ -146,7 +146,7 @@ Chapter 8 Projects:
   `.\Ch08_02Particles\`
 
 *****************************************
-Chapter 9 Projects:
+Chapter 9 projects: *Rendering on Multiple Threads and Deferred Contexts*
 -----------------------------------------
 * Multithreaded rendering - benchmark
 
@@ -161,7 +161,7 @@ Chapter 9 Projects:
   `.\Ch09_03DualParaboloidMapping\`
 
 *****************************************
-Chapter 10 Projects:
+Chapter 10 projects: *Implementing Deferred Rendering*
 -----------------------------------------
 * Deferred rendering
 
@@ -174,7 +174,7 @@ Chapter 10 Projects:
       The project will also compile and render without these textures
 
 *****************************************
-Chapter 11 Projects:
+Chapter 11 projects: *Integrating Direct3D with XAML and Windows 8.1*
 -----------------------------------------
 * Direct3D CoreWindow Windows Store app
 
