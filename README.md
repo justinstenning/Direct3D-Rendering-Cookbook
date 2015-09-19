@@ -31,7 +31,7 @@ NOTE:
 `.\External`
 
 *****************************************
-Shared Projects:
+Shared projects:
 -----------------------------------------
 * Desktop apps
 
@@ -42,7 +42,7 @@ Shared Projects:
   `.\Common.WinRT\Common.WinRT.csproj`
 
 *****************************************
-Chapter 1 projects: *Getting Started with Direct3D*
+Chapter 1: *Getting Started with Direct3D*
 -----------------------------------------
 
 * Building a Direct3D 11 application with C# and SharpDX
@@ -59,7 +59,7 @@ Chapter 1 projects: *Getting Started with Direct3D*
 
 *****************************************
 -----------------------------------------
-Chapter 2 projects: *Rendering with Direct3D*
+Chapter 2: *Rendering with Direct3D*
 -----------------------------------------
 * Building a simple rendering framework
 
@@ -74,7 +74,7 @@ Chapter 2 projects: *Rendering with Direct3D*
   `.\Ch02_02AddingTexture\`
 
 *****************************************
-Chapter 3 projects: *Rendering Meshes*
+Chapter 3: *Rendering Meshes*
 -----------------------------------------
 * Cube and Sphere
 
@@ -93,7 +93,7 @@ Chapter 3 projects: *Rendering Meshes*
   `.\Ch03_03LoadMesh\`
 
 *****************************************
-Chapter 4 projects: *Animating Meshes with Vertex Skinning*
+Chapter 4: *Animating Meshes with Vertex Skinning*
 -----------------------------------------
 * Vertex Skinning
 
@@ -104,7 +104,7 @@ Chapter 4 projects: *Animating Meshes with Vertex Skinning*
   `.\Ch04_02Animate\`
 
 *****************************************
-Chapter 5 projects: *Applying Hardware Tessellation*
+Chapter 5: *Applying Hardware Tessellation*
 -----------------------------------------
 * Tessellation basics
 
@@ -115,7 +115,7 @@ Chapter 5 projects: *Applying Hardware Tessellation*
   `.\Ch05_02TessellatedMesh\`
 
 *****************************************
-Chapter 6 projects: *Adding Surface Detail with Normal and Displacement Mapping*
+Chapter 6: *Adding Surface Detail with Normal and Displacement Mapping*
 -----------------------------------------
 * Displacement Mapping
 
@@ -128,14 +128,14 @@ Chapter 6 projects: *Adding Surface Detail with Normal and Displacement Mapping*
   `.\Ch06_02DisplacementDecals\`
 
 *****************************************
-Chapter 7 projects: *Performing Image Processing Techniques*
+Chapter 7: *Performing Image Processing Techniques*
 -----------------------------------------
 * Image processing (compute shaders)
 
   `.\Ch07_01ImageProcessing\`
 
 *****************************************
-Chapter 8 projects: *Incorporating Physics and Simulations*
+Chapter 8: *Incorporating Physics and Simulations*
 -----------------------------------------
 * Physics (with BulletSharp)
 
@@ -146,7 +146,7 @@ Chapter 8 projects: *Incorporating Physics and Simulations*
   `.\Ch08_02Particles\`
 
 *****************************************
-Chapter 9 projects: *Rendering on Multiple Threads and Deferred Contexts*
+Chapter 9: *Rendering on Multiple Threads and Deferred Contexts*
 -----------------------------------------
 * Multithreaded rendering - benchmark
 
@@ -161,7 +161,7 @@ Chapter 9 projects: *Rendering on Multiple Threads and Deferred Contexts*
   `.\Ch09_03DualParaboloidMapping\`
 
 *****************************************
-Chapter 10 projects: *Implementing Deferred Rendering*
+Chapter 10: *Implementing Deferred Rendering*
 -----------------------------------------
 * Deferred rendering
 
@@ -174,7 +174,7 @@ Chapter 10 projects: *Implementing Deferred Rendering*
       The project will also compile and render without these textures
 
 *****************************************
-Chapter 11 projects: *Integrating Direct3D with XAML and Windows 8.1*
+Chapter 11: *Integrating Direct3D with XAML and Windows 8.1*
 -----------------------------------------
 * Direct3D CoreWindow Windows Store app
 
