@@ -1,5 +1,5 @@
 # Direct3D Rendering Cookbook - companion source code
-This repository contains the up-to-date companion source code for my book [Direct3D Rendering Cookbook](http://www.amazon.com/gp/product/B00HYQFGYI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00HYQFGYI&linkCode=as2&tag=spazzarama03-20&linkId=5CQLVOQWKPW7KDWK) released in January 2014.
+This repository contains the up-to-date companion source code for my book [Direct3D Rendering Cookbook](http://www.amazon.com/gp/product/B00HYQFGYI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00HYQFGYI&linkCode=as2&tag=spazzarama03-20&linkId=5CQLVOQWKPW7KDWK) published in January 2014 by [Packt Publishing](https://www.packtpub.com/game-development/direct3d-rendering-cookbook).
 
 ![Direct3D Rendering Cookbook cover image](http://ws-na.amazon-adsystem.com/widgets/q?_encoding=UTF8&ASIN=B00HYQFGYI&Format=_SL160_&ID=AsinImage&MarketPlace=US&ServiceVersion=20070822&WS=1&tag=spazzarama03-20)
 
@@ -15,8 +15,8 @@ To build all projects:
 NOTE:
   If for some reason the `MeshContentTask` build target does not
   function correctly for you, the compiled assets are available
-  separately from:
-  [my OneDrive](https://onedrive.live.com/?cid=1E4B8ED6FFC56FDC&id=1E4B8ED6FFC56FDC%211800), they
+  separately from
+  [OneDrive](https://onedrive.live.com/?cid=1E4B8ED6FFC56FDC&id=1E4B8ED6FFC56FDC%211800), they
   just need to be copied to the correct build location.
 
 *****************************************
