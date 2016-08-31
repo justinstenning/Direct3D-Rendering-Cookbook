@@ -5,6 +5,7 @@ This repository contains the up-to-date companion source code for my book [Direc
 
 Any questions or issues can be posted in the [issues](https://github.com/spazzarama/Direct3D-Rendering-Cookbook/issues)
 
+
 Build Instructions
 ------------------
 To build all projects:
@@ -12,12 +13,18 @@ To build all projects:
   2. right-click the root node within the Solution Explorer 
      and select *Rebuild Solution*.
 
-NOTE:
+NOTE: If you get an error on Windows 10 and Visual Studio 2015 while trying to create the Direct3D device in debug mode, you may need to enable the DirectX Developer Runtime https://blogs.msdn.microsoft.com/chuckw/2015/08/05/where-is-the-directx-sdk-2015-edition/ or by running the command:
+```
+Dism /online /add-capability /capabilityname:Tools.Graphics.DirectX~~~~0.0.1.0
+```
+     
+NOTE 2:
   If for some reason the `MeshContentTask` build target does not
   function correctly for you, the compiled assets are available
   separately from
   [OneDrive](https://onedrive.live.com/?cid=1E4B8ED6FFC56FDC&id=1E4B8ED6FFC56FDC%211800), they
-  just need to be copied to the correct build location.
+  just need to be copied to the correct build location. The MeshContentTask is not working when
+  the *.fbx files do not get converted to *.cmo in your build output directory.
 
 *****************************************
 

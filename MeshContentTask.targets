@@ -23,7 +23,10 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVers
 
   <!-- Makes the the directories that the task uses -->
   <Target Name="MakeDirsForMeshContentTask">
-    <ItemGroup Condition="'@(MeshContentTask)'!=''">
+    <ItemGroup Condition="'@(MeshContentTask)'!='' and $(VisualStudioVersion) &gt;= 14.0">
+      <MeshContentTaskDirsToMake Include="@(MeshContentOutputs->DirectoryName())" />
+    </ItemGroup>
+    <ItemGroup Condition="'@(MeshContentTask)'!='' and $(VisualStudioVersion) &lt; 14.0">
       <MeshContentOutputs Include="@(MeshContentTask->Metadata('ContentOutput')->Distinct())">
         <DeploymentContent>True</DeploymentContent>
       </MeshContentOutputs>
@@ -76,7 +79,7 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVers
     />
 
     <MeshContentTask
-        Condition                    = "'@(MeshContentTask)' != '' and '%(MeshContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '12.0'"
+        Condition                    = "'@(MeshContentTask)' != '' and '%(MeshContentTask.ExcludedFromBuild)'!='true' and $(VisualStudioVersion) &gt; 11.0"
         Source                       = "%(MeshContentTask.Identity)"
         ContentOutput                = "%(MeshContentTask.ContentOutput)"
         TLogDir                      = "$(TLogLocation)"
@@ -100,6 +103,7 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVers
     <ItemGroup>
       <ExportedFiles>
         <DeploymentContent>True</DeploymentContent>
+        <Link Condition="$(VisualStudioVersion) &gt;= 14.0">%(Filename)%(Extension)</Link>
       </ExportedFiles>
     </ItemGroup>
 

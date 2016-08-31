@@ -68,7 +68,7 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\E
       Importance="High"
       Text="%(ImageContentTask.Identity)" />
     <ImageContentTask
-        Condition                    = "'@(ImageContentTask)' != '' and '%(ImageContentTask.ExcludedFromBuild)'!='true' and '$(VisualStudioVersion)' == '12.0'"
+        Condition                    = "'@(ImageContentTask)' != '' and '%(ImageContentTask.ExcludedFromBuild)'!='true' and $(VisualStudioVersion) &gt; 11.0"
         Source                       = "%(ImageContentTask.Identity)"
         ContentOutput                = "%(ImageContentTask.ContentOutput)"
         Compress                     = "%(ImageContentTask.Compress)"
