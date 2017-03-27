@@ -5,6 +5,8 @@ This repository contains the up-to-date companion source code for my book [Direc
 
 Any questions or issues can be posted in the [issues](https://github.com/spazzarama/Direct3D-Rendering-Cookbook/issues)
 
+**Update 2017-03-27**: this repository has been updated to work with SharpDX 3.1.1. You can find the previous version of the source code that is used in the book [here](https://github.com/spazzarama/Direct3D-Rendering-Cookbook/releases/tag/v1.0.1).
+
 Build Instructions
 ------------------
 To build all projects:
@@ -24,7 +26,7 @@ NOTE 2:
   separately from
   [OneDrive](https://onedrive.live.com/?cid=1E4B8ED6FFC56FDC&id=1E4B8ED6FFC56FDC%211800), they
   just need to be copied to the correct build output location. You know if the MeshContentTask is not working when
-  the *.fbx files do not get converted to *.cmo in your build output directory.
+  the \*.fbx files do not get converted to \*.cmo in your build output directory.
 
 *****************************************
 
