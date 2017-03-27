@@ -96,7 +96,7 @@ namespace Ch06_01DisplacementMapping
             //}));
 
             // Load texture
-            textureView = ToDispose(ShaderResourceView.FromFile(device, "Texture2.png"));
+            textureView = ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Texture2.png"));
 
             // Create our sampler state
             samplerState = ToDispose(new SamplerState(device, new SamplerStateDescription()

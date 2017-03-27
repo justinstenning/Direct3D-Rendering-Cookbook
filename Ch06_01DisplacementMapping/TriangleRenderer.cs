@@ -54,7 +54,7 @@ namespace Ch06_01DisplacementMapping
             triangleBinding = new VertexBufferBinding(triangleVertices, Utilities.SizeOf<Vertex>(), 0);
 
             // Load texture
-            textureView = ToDispose(ShaderResourceView.FromFile(device, "Texture2.png"));
+            textureView = ToDispose(Common.TextureLoader.ShaderResourceViewFromFile(device, "Texture2.png"));
 
             // Create our sampler state
             samplerState = ToDispose(new SamplerState(device, new SamplerStateDescription()

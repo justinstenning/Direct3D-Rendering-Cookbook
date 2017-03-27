@@ -265,9 +265,9 @@ namespace Ch06_02DisplacementDecals
             decalBuffer = ToDispose(new Buffer(device, Utilities.SizeOf<ConstantBuffers.DecalBuffer>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0));
 
             // Load the decal textures
-            decalDiffuse = ToDispose(ShaderResourceView.FromFile(device, "Crater_Diffuse.png"));
-            decalDisplacement = ToDispose(ShaderResourceView.FromFile(device, "Crater_Displacement.png"));
-            decalNormal = ToDispose(ShaderResourceView.FromFile(device, "Crater_Normal.png"));
+            decalDiffuse = ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Crater_Diffuse.png"));
+            decalDisplacement = ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Crater_Displacement.png"));
+            decalNormal = ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Crater_Normal.png"));
 
             // Configure the depth buffer to discard pixels that are
             // further than the current pixel.

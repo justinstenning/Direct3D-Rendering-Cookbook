@@ -1,5 +1,4 @@
-﻿using Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -86,7 +85,7 @@ namespace Ch03_03LoadMesh
                 for (var i = 0; i < m.Textures.Length; i++)
                 {
                     if (SharpDX.IO.NativeFile.Exists(m.Textures[i]))
-                        textureViews.Add(ToDispose(ShaderResourceView.FromFile(device, m.Textures[i])));
+                        textureViews.Add(ToDispose(TextureLoader.ShaderResourceViewFromFile(device, m.Textures[i])));
                     else
                         textureViews.Add(null);
                 }

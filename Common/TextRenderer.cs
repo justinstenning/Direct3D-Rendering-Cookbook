@@ -96,7 +96,7 @@ namespace Common
             var context2D = DeviceManager.Direct2DContext;
 
             context2D.BeginDraw();
-            context2D.Transform = Matrix.Identity;
+            context2D.Transform = Matrix3x2.Identity;
             context2D.DrawText(Text, textFormat, new RectangleF(Location.X, Location.Y, Location.X + lineLength, Location.Y + 16), sceneColorBrush);
             context2D.EndDraw();
         }

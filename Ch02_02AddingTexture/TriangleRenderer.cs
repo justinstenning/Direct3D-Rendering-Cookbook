@@ -44,7 +44,7 @@ public class TriangleRenderer : Common.RendererBase
         var context = this.DeviceManager.Direct3DContext;
 
         // Load texture
-        textureView = ToDispose(ShaderResourceView.FromFile(device, "Texture2.png"));
+        textureView = ToDispose(Common.TextureLoader.ShaderResourceViewFromFile(device, "Texture2.png"));
 
         // Create our sampler state
         samplerState = ToDispose(new SamplerState(device, new SamplerStateDescription()

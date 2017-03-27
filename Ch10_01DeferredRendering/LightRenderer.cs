@@ -15,6 +15,7 @@ using Common;
 // Resolve class name conflicts by explicitly stating
 // which class they refer to:
 using Buffer = SharpDX.Direct3D11.Buffer;
+using SharpDX.Mathematics.Interop;
 
 namespace Ch10_01DeferredRendering
 {
@@ -277,7 +278,7 @@ namespace Ch10_01DeferredRendering
 
             // backup existing context state
             int oldStencilRef = 0;
-            Color4 oldBlendFactor;
+            RawColor4 oldBlendFactor;
             int oldSampleMaskRef;
             using(var oldVertexLayout = context.InputAssembler.InputLayout)
             using(var oldPixelShader = context.PixelShader.Get())

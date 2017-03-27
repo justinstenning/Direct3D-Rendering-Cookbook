@@ -11,6 +11,8 @@
     <AssemblyName>Ch08_01Physics</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -32,23 +34,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BulletSharp">
-      <HintPath>..\External\bulletsharp-2.82\Release SharpDX\BulletSharp.dll</HintPath>
+    <Reference Include="BulletSharp, Version=0.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BulletSharp.0.9\lib\net40-client\BulletSharp.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX">
-      <HintPath>..\External\Bin\DirectX11_1-net40\SharpDX.dll</HintPath>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.D3DCompiler">
-      <HintPath>..\External\Bin\DirectX11_1-net40\SharpDX.D3DCompiler.dll</HintPath>
+    <Reference Include="SharpDX.D3DCompiler, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.D3DCompiler.3.1.1\lib\net45\SharpDX.D3DCompiler.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.Direct2D1">
-      <HintPath>..\External\Bin\DirectX11_1-net40\SharpDX.Direct2D1.dll</HintPath>
+    <Reference Include="SharpDX.Desktop, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Desktop.3.1.1\lib\net45\SharpDX.Desktop.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.Direct3D11">
-      <HintPath>..\External\Bin\DirectX11_1-net40\SharpDX.Direct3D11.dll</HintPath>
+    <Reference Include="SharpDX.Direct2D1, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct2D1.3.1.1\lib\net45\SharpDX.Direct2D1.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="SharpDX.DXGI">
-      <HintPath>..\External\Bin\DirectX11_1-net40\SharpDX.DXGI.dll</HintPath>
+    <Reference Include="SharpDX.Direct3D11, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Direct3D11.3.1.1\lib\net45\SharpDX.Direct3D11.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.DXGI, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.DXGI.3.1.1\lib\net45\SharpDX.DXGI.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpDX.Mathematics.3.1.1\lib\net45\SharpDX.Mathematics.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AxisGridRenderer.cs" />
     <Compile Include="BufferedDebugDraw.cs" />
+    <Compile Include="BulletExtensions.cs" />
     <Compile Include="ConstantBuffers.cs" />
     <Compile Include="D3DApp.cs" />
     <Compile Include="Form1.cs">
@@ -91,6 +108,7 @@
     <MeshContentTask Include="PhysicsScene1.fbx" />
     <MeshContentTask Include="Bataux.fbx" />
     <None Include="MultipleTextures.dgsl" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -155,4 +173,11 @@
   </Target>
   -->
   <Import Project="..\MeshContentTask.targets" />
+  <Import Project="..\packages\BulletSharp.0.9\build\net40-client\BulletSharp.targets" Condition="Exists('..\packages\BulletSharp.0.9\build\net40-client\BulletSharp.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\BulletSharp.0.9\build\net40-client\BulletSharp.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\BulletSharp.0.9\build\net40-client\BulletSharp.targets'))" />
+  </Target>
 </Project>

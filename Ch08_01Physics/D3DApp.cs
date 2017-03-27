@@ -335,7 +335,7 @@ namespace Ch08_01Physics
             {
                 RemoveAndDispose(ref world);
                 world = ToDispose(new BulletSharp.DiscreteDynamicsWorld(dispatcher, broadphase, solver, defaultConfig));
-                world.Gravity = new Vector3(0, -10, 0);
+                world.Gravity = new BulletSharp.Math.Vector3(0, -10, 0);
 
                 // For each mesh, create a RigidBody and add to "world" for simulation
                 meshes.ForEach(m =>
@@ -381,14 +381,16 @@ namespace Ch08_01Physics
                                 select v.Position - extent.Center));
                         }
                         // Create the collision shape
-                        var iva = new BulletSharp.TriangleIndexVertexArray(indices.ToArray(), vertices.ToArray());
+                        var iva = new BulletSharp.TriangleIndexVertexArray(indices.ToArray(), vertices.ToArray().ToBulletVector3Array());
                         shape = new BulletSharp.BvhTriangleMeshShape(iva, true);
                     }
                     #endregion
 
                     m.World = Matrix.Identity; // Reset mesh location
-                    float mass; Vector3 vec; 
-                    shape.GetBoundingSphere(out vec, out mass);
+                    float mass; Vector3 vec;
+                    BulletSharp.Math.Vector3 bsVec;
+                    shape.GetBoundingSphere(out bsVec, out mass);
+                    vec = bsVec.ToSharpDXVector3();
                     var body = new BulletSharp.RigidBody(
                         new BulletSharp.RigidBodyConstructionInfo(name.Contains("static") ? 0 : mass, 
                             new MeshMotionState(m),

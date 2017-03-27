@@ -40,7 +40,7 @@ namespace Ch03_02WithCubeMapping
             var device = this.DeviceManager.Direct3DDevice;
 
             // Load texture (a DDS cube map)
-            textureView = ShaderResourceView.FromFile(device, "CubeMap.dds");
+            textureView = TextureLoader.ShaderResourceViewFromFile(device, "CubeMap.dds");
 
             // Create our sampler state
             samplerState = new SamplerState(device, new SamplerStateDescription()

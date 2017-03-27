@@ -68,7 +68,7 @@ namespace Ch02_02AddingTexture
             var device = this.DeviceManager.Direct3DDevice;
 
             // Load texture
-            textureView = ToDispose(ShaderResourceView.FromFile(device, "Texture.png"));
+            textureView = ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Texture.png"));
 
             // Create our sampler state
             samplerState = ToDispose(new SamplerState(device, new SamplerStateDescription()

@@ -69,7 +69,7 @@ namespace Ch07_01ImageProcessing
             if (this.DeviceManager != null)
             {
                 var device = this.DeviceManager.Direct3DDevice;
-                sourceTextureSRV = ShaderResourceView.FromFile(device, sourceImageFile);
+                sourceTextureSRV = TextureLoader.ShaderResourceViewFromFile(device, sourceImageFile);
                 //using (var tmpTex = sourceTextureSRV.ResourceAs<Texture2D>())
                 //{
                 //    if (tmpTex.Description.Format != Format.R8G8B8A8_UNorm)

@@ -312,9 +312,9 @@ namespace Ch08_02Particles
             // Create the particle frame buffer
             perFrame = ToDispose(new Buffer(device, Utilities.SizeOf<ParticleFrame>(), ResourceUsage.Default, BindFlags.ConstantBuffer, CpuAccessFlags.None, ResourceOptionFlags.None, 0));
 
-            particleTextureSRVs.Add(ToDispose(ShaderResourceView.FromFile(device, "Particle.png")));
-            particleTextureSRVs.Add(ToDispose(ShaderResourceView.FromFile(device, "Snowflake.png")));
-            particleTextureSRVs.Add(ToDispose(ShaderResourceView.FromFile(device, "Square.png")));
+            particleTextureSRVs.Add(ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Particle.png")));
+            particleTextureSRVs.Add(ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Snowflake.png")));
+            particleTextureSRVs.Add(ToDispose(TextureLoader.ShaderResourceViewFromFile(device, "Square.png")));
             activeParticleTextureIndex = 0;
 
             // Reinitialize particles if > 0
@@ -485,7 +485,7 @@ namespace Ch08_02Particles
             var context = this.DeviceManager.Direct3DContext;
 
             // Retrieve existing pipeline states for backup
-            Color4 oldBlendFactor;
+            SharpDX.Mathematics.Interop.RawColor4 oldBlendFactor;
             int oldSampleMask;
             int oldStencil;
             var oldPSBufs = context.PixelShader.GetConstantBuffers(0, 1);

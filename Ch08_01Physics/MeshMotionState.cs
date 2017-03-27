@@ -16,16 +16,15 @@ namespace Ch08_01Physics
             Mesh = mesh;
         }
 
-        public override SharpDX.Matrix WorldTransform
+        public override void GetWorldTransform(out BulletSharp.Math.Matrix worldTrans)
         {
-            get
-            {
-                return Mesh.World *  Matrix.Translation(Mesh.Mesh.Extent.Center);
-            }
-            set
-            {
-                Mesh.World = Matrix.Translation(-Mesh.Mesh.Extent.Center) * value;
-            }
+
+            worldTrans = (Mesh.World * Matrix.Translation(Mesh.Mesh.Extent.Center)).ToBulletMatrix();
+        }
+
+        public override void SetWorldTransform(ref BulletSharp.Math.Matrix worldTrans)
+        {
+            Mesh.World = (Matrix.Translation(-Mesh.Mesh.Extent.Center).ToBulletMatrix() * worldTrans).ToSharpDXMatrix();
         }
     }
 }

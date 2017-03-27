@@ -1,5 +1,5 @@
 ﻿using BulletSharp;
-using SharpDX;
+using BulletSharp.Math;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,6 +7,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Color = System.Drawing.Color;
+
 
 namespace Ch08_01Physics
 {
@@ -31,15 +32,31 @@ namespace Ch08_01Physics
         }
     }
 
-    public abstract class BufferedDebugDraw : DebugDraw
+    public abstract class BufferedDebugDraw : DebugDraw, IDisposable
     {
         protected List<PositionColored> lines = new List<PositionColored>();
 
         public override DebugDrawModes DebugMode { get; set; }
 
-        protected virtual int ColorToInt(ref Color3 c)
+        public int ToRgba(ref Vector3 c)
         {
-            int ci = c.ToRgba();
+            uint a = 255;
+            uint r = (uint)(c.X * 255.0f) & 255;
+            uint g = (uint)(c.Y * 255.0f) & 255;
+            uint b = (uint)(c.Z * 255.0f) & 255;
+
+            uint value = r;
+            value |= g << 8;
+            value |= b << 16;
+            value |= a << 24;
+
+            return (int)value;
+        }
+
+        protected virtual int ColorToInt(ref Vector3 c)
+        {
+            var ci = ToRgba(ref c);
+
             return (ci & 0xff0000) >> 16 | (ci & 0xff00) | (ci & 0xff) << 16;
         }
 
@@ -48,20 +65,20 @@ namespace Ch08_01Physics
             throw new NotImplementedException();
         }
 
-        public override void DrawLine(ref Vector3 from, ref Vector3 to, Color3 fromColor, Color3 toColor)
+        public override void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 fromColor, ref Vector3 toColor)
         {
             lines.Add(new PositionColored(ref from, ColorToInt(ref fromColor)));
             lines.Add(new PositionColored(ref to, ColorToInt(ref toColor)));
         }
 
-        public override void DrawLine(ref Vector3 from, ref Vector3 to, Color3 color)
+        public override void DrawLine(ref Vector3 from, ref Vector3 to, ref Vector3 color)
         {
             int intColor = ColorToInt(ref color);
             lines.Add(new PositionColored(ref from, intColor));
             lines.Add(new PositionColored(ref to, intColor));
         }
 
-        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, Color3 color)
+        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Vector3 color)
         {
             var p1 = bbMin;
             var p2 = new Vector3(bbMax.X, bbMin.Y, bbMin.Z);
@@ -89,7 +106,7 @@ namespace Ch08_01Physics
             lines.Add(new PositionColored(ref p8, intColor)); lines.Add(new PositionColored(ref p5, intColor));
         }
 
-        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Matrix trans, Color3 color)
+        public override void DrawBox(ref Vector3 bbMin, ref Vector3 bbMax, ref Matrix trans, ref Vector3 color)
         {
             var p1 = Vector3.TransformCoordinate(bbMin, trans);
             var p2 = Vector3.TransformCoordinate(new Vector3(bbMax.X, bbMin.Y, bbMin.Z), trans);
@@ -117,11 +134,7 @@ namespace Ch08_01Physics
             lines.Add(new PositionColored(ref p8, intColor)); lines.Add(new PositionColored(ref p5, intColor));
         }
 
-        //public override void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, ref Vector3 __unnamed003, ref Vector3 __unnamed004, ref Vector3 __unnamed005, Color3 color, float alpha)
-        //{
-        //    base.DrawTriangle(ref v0, ref v1, ref v2, ref __unnamed003, ref __unnamed004, ref __unnamed005, color, alpha);
-        //}
-        public override void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, Color3 color, float __unnamed004)
+        public override void DrawTriangle(ref Vector3 v0, ref Vector3 v1, ref Vector3 v2, ref Vector3 color, float __unnamed004)
         {
             int intColor = ColorToInt(ref color);
             lines.Add(new PositionColored(ref v0, intColor));
@@ -132,7 +145,8 @@ namespace Ch08_01Physics
 
         public override void DrawTransform(ref Matrix transform, float orthoLen)
         {
-            Vector3 start = transform.TranslationVector;
+            
+            Vector3 start = transform.Origin;
 
             lines.Add(new PositionColored(ref start, 0xff0000));
             lines.Add(new PositionColored(start + new Vector3(orthoLen, 0, 0), 0xff0000));
@@ -142,12 +156,12 @@ namespace Ch08_01Physics
             lines.Add(new PositionColored(start + new Vector3(0, 0, orthoLen), 0x0000ff));
         }
 
-        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color3 color, bool drawSect)
+        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, ref Vector3 color, bool drawSect)
         {
-            DrawArc(ref center, ref normal, ref axis, radiusA, radiusB, minAngle, maxAngle, color, drawSect, 10.0f);
+            DrawArc(ref center, ref normal, ref axis, radiusA, radiusB, minAngle, maxAngle, ref color, drawSect, 10.0f);
         }
 
-        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, Color3 color, bool drawSect, float stepDegrees)
+        public override void DrawArc(ref Vector3 center, ref Vector3 normal, ref Vector3 axis, float radiusA, float radiusB, float minAngle, float maxAngle, ref Vector3 color, bool drawSect, float stepDegrees)
         {
             Vector3 vx = axis;
             Vector3 vy = Vector3.Cross(normal, axis);
@@ -159,7 +173,7 @@ namespace Ch08_01Physics
             Vector3 next = center + radiusA * vx * (float)Math.Cos(minAngle) + radiusB * vy * (float)Math.Sin(minAngle);
 
             if (drawSect)
-                DrawLine(ref center, ref next, color);
+                DrawLine(ref center, ref next, ref color);
 
             int intColor = ColorToInt(ref color);
             PositionColored last = new PositionColored(ref next, intColor);
@@ -173,10 +187,10 @@ namespace Ch08_01Physics
             }
 
             if (drawSect)
-                DrawLine(ref center, ref next, color);
+                DrawLine(ref center, ref next, ref color);
         }
 
-        public override void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, Color3 color)
+        public override void DrawContactPoint(ref Vector3 pointOnB, ref Vector3 normalOnB, float distance, int lifeTime, ref Vector3 color)
         {
             int intColor = ColorToInt(ref color);
             Vector3 to = pointOnB + normalOnB * 1; // distance
@@ -187,6 +201,21 @@ namespace Ch08_01Physics
         public override void ReportErrorWarning(string warningString)
         {
             System.Windows.Forms.MessageBox.Show(warningString);
+        }
+
+        ~BufferedDebugDraw()
+        {
+            Dispose(false);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+
         }
     }
 }
