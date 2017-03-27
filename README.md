@@ -5,12 +5,12 @@ This repository contains the up-to-date companion source code for my book [Direc
 
 Any questions or issues can be posted in the [issues](https://github.com/spazzarama/Direct3D-Rendering-Cookbook/issues)
 
-
 Build Instructions
 ------------------
 To build all projects:
   1. open the relevant solution, 
-  2. right-click the root node within the Solution Explorer 
+  2. restore NuGet packages (right click solution in solution explorer and select Restore NuGet Packages)
+  3. right-click the root node within the Solution Explorer 
      and select *Rebuild Solution*.
 
 NOTE: If you get an error on Windows 10 and Visual Studio 2015 while trying to create the Direct3D device in debug mode, you may need to enable the DirectX Developer Runtime https://blogs.msdn.microsoft.com/chuckw/2015/08/05/where-is-the-directx-sdk-2015-edition/ or by running the command:
@@ -23,18 +23,18 @@ NOTE 2:
   function correctly for you, the compiled assets are available
   separately from
   [OneDrive](https://onedrive.live.com/?cid=1E4B8ED6FFC56FDC&id=1E4B8ED6FFC56FDC%211800), they
-  just need to be copied to the correct build location. The MeshContentTask is not working when
+  just need to be copied to the correct build output location. You know if the MeshContentTask is not working when
   the *.fbx files do not get converted to *.cmo in your build output directory.
 
 *****************************************
 
-* All desktop recipes (compatible with VS2012 and VS2013):
+* All desktop recipes (compatible with VS2012, VS2013 and VS2015):
 `.\D3DRendering.sln`
 
 * All Windows Store apps recipes (VS2013 only):
 `.\D3DRendering.vs2013.WinRT.sln`
 
-* SharpDX 2.5.1 (beta) and BulletSharp
+* D3DCompiler redistributable
 `.\External`
 
 *****************************************
