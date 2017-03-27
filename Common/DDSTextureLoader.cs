@@ -1,8 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿// DDSTextureLoader Ported to C# by Justin Stenning, March 2017
+//--------------------------------------------------------------------------------------
+// File: DDSTextureLoader.cpp
+//
+// Functions for loading a DDS texture and creating a Direct3D runtime resource for it
+//
+// Note these functions are useful as a light-weight runtime loader for DDS files. For
+// a full-featured DDS file reader, writer, and texture processing pipeline see
+// the 'Texconv' sample and the 'DirectXTex' library.
+//
+// THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF
+// ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO
+// THE IMPLIED WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A
+// PARTICULAR PURPOSE.
+//
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//
+// http://go.microsoft.com/fwlink/?LinkId=248926
+// http://go.microsoft.com/fwlink/?LinkId=248929
+//--------------------------------------------------------------------------------------
+
+using System;
 using SharpDX;
 using SharpDX.DXGI;
 using SharpDX.Direct3D;
@@ -110,7 +127,7 @@ namespace Common
             public ResourceDimension resourceDimension;
             public ResourceOptionFlags miscFlag; // see D3D11_RESOURCE_MISC_FLAG
             public int arraySize;
-            public DDS_MISC_FLAGS2 miscFlags2;
+            public int miscFlags2;
         }
 
 
@@ -247,8 +264,8 @@ namespace Common
             {
                 if (MAKEFOURCC('D', 'X', '1', '0') == header.ddspf.fourCC)
                 {
-                    var d3d10ext = (DDS_HEADER_DXT10)Marshal.PtrToStructure(headerPtr + Marshal.SizeOf(typeof(DDS_HEADER)), typeof(DDS_HEADER_DXT10));// reinterpret_cast <const DDS_HEADER_DXT10*>((const char*)header + sizeof(DDS_HEADER));
-                    var mode = (DDS_ALPHA_MODE)(d3d10ext.miscFlags2 & DDS_MISC_FLAGS2.DDS_MISC_FLAGS2_ALPHA_MODE_MASK);
+                    var d3d10ext = (DDS_HEADER_DXT10)Marshal.PtrToStructure(headerPtr + Marshal.SizeOf(typeof(DDS_HEADER)), typeof(DDS_HEADER_DXT10));
+                    var mode = (DDS_ALPHA_MODE)(d3d10ext.miscFlags2 & (int)DDS_MISC_FLAGS2.DDS_MISC_FLAGS2_ALPHA_MODE_MASK);
                     switch (mode)
                     {
                         case DDS_ALPHA_MODE.DDS_ALPHA_MODE_STRAIGHT:
@@ -349,8 +366,6 @@ namespace Common
             outNumBytes = numBytes;
             outRowBytes = rowBytes;
             outNumRows = numRows;
-
-
         }
 
 
@@ -570,16 +585,6 @@ namespace Common
             return Format.Unknown;
         }
 
-        static T ByteArrayToStructure<T>(byte[] bytes, int start, int count) where T : struct
-        {
-
-            byte[] temp = bytes.Skip(start).Take(count).ToArray();
-            GCHandle handle = GCHandle.Alloc(temp, GCHandleType.Pinned);
-            T stuff = (T)Marshal.PtrToStructure(handle.AddrOfPinnedObject(), typeof(T));
-            handle.Free();
-            return stuff;
-        }
-
         //--------------------------------------------------------------------------------------
         static bool FillInitData(int width,
             int height,
@@ -595,7 +600,6 @@ namespace Common
             out int tdepth,
             out int skipMip,
             DataBox[] initData)
-        //_Out_writes_(mipCount* arraySize) D3D11_SUBRESOURCE_DATA* initData)
         {
             if (bitData == null)
                 throw new ArgumentNullException("bitData");
@@ -726,7 +730,7 @@ namespace Common
             bool forceSRGB,
             bool isCubeMap,
             DataBox[] initData,
-             out SharpDX.Direct3D11.Resource texture,
+             out Resource texture,
              out ShaderResourceView textureView)
         {
             if (d3dDevice == null)
@@ -746,10 +750,9 @@ namespace Common
 
             switch (resDim)
             {
-                case ResourceDimension.Texture1D:// D3D11_RESOURCE_DIMENSION_TEXTURE1D:
+                case ResourceDimension.Texture1D:
                     {
                         Texture1DDescription desc;
-                        //D3D11_TEXTURE1D_DESC desc;
                         desc.Width = width;
                         desc.MipLevels = mipCount;
                         desc.ArraySize = arraySize;
@@ -757,7 +760,7 @@ namespace Common
                         desc.Usage = usage;
                         desc.BindFlags = bindFlags;
                         desc.CpuAccessFlags = CpuAccessFlags;
-                        desc.OptionFlags = miscFlags & ~ResourceOptionFlags.TextureCube;// ~D3D11_RESOURCE_MISC_TEXTURECUBE;
+                        desc.OptionFlags = miscFlags & ~ResourceOptionFlags.TextureCube;
 
                         Texture1D tex = null;
                         tex = new Texture1D(d3dDevice, desc, initData);
@@ -766,13 +769,13 @@ namespace Common
                         {
                             if (arraySize > 1)
                             {
-                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture1DArray;// D3D11_SRV_DIMENSION_TEXTURE1DARRAY;
+                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture1DArray;
                                 SRVDesc.Texture1DArray.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                                 SRVDesc.Texture1DArray.ArraySize = arraySize;
                             }
                             else
                             {
-                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture1D;// D3D11_SRV_DIMENSION_TEXTURE1D;
+                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture1D;
                                 SRVDesc.Texture1D.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                             }
                             textureView = new ShaderResourceView(d3dDevice, tex, SRVDesc);
@@ -786,17 +789,11 @@ namespace Common
 
 
                             texture = tex;
-
-                            //                else
-                            //                {
-                            //                    SetDebugObjectName(tex, "DDSTextureLoader");
-                            //tex->Release();
-                            //                }
                         }
                     }
                     break;
 
-                case ResourceDimension.Texture2D:// D3D11_RESOURCE_DIMENSION_TEXTURE2D:
+                case ResourceDimension.Texture2D:
                     {
                         Texture2DDescription desc = new Texture2DDescription();
 
@@ -813,11 +810,11 @@ namespace Common
                         desc.CpuAccessFlags = CpuAccessFlags;
                         if (isCubeMap)
                         {
-                            desc.OptionFlags = miscFlags | ResourceOptionFlags.TextureCube;// D3D11_RESOURCE_MISC_TEXTURECUBE;
+                            desc.OptionFlags = miscFlags | ResourceOptionFlags.TextureCube;
                         }
                         else
                         {
-                            desc.OptionFlags = miscFlags & ResourceOptionFlags.TextureCube;// ~D3D11_RESOURCE_MISC_TEXTURECUBE;
+                            desc.OptionFlags = miscFlags & ResourceOptionFlags.TextureCube;
                         }
 
                         Texture2D tex = new Texture2D(d3dDevice, desc, initData);
@@ -829,7 +826,7 @@ namespace Common
                             {
                                 if (arraySize > 6)
                                 {
-                                    SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.TextureCubeArray; //D3D11_SRV_DIMENSION_TEXTURECUBEARRAY;
+                                    SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.TextureCubeArray;
                                     SRVDesc.TextureCubeArray.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
 
                                     // Earlier we set arraySize to (NumCubes * 6)
@@ -837,19 +834,19 @@ namespace Common
                                 }
                                 else
                                 {
-                                    SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.TextureCube;// D3D11_SRV_DIMENSION_TEXTURECUBE;
+                                    SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.TextureCube;
                                     SRVDesc.TextureCube.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                                 }
                             }
                             else if (arraySize > 1)
                             {
-                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2DArray;// D3D11_SRV_DIMENSION_TEXTURE2DARRAY;
+                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2DArray;
                                 SRVDesc.Texture2DArray.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                                 SRVDesc.Texture2DArray.ArraySize = arraySize;
                             }
                             else
                             {
-                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D;// D3D11_SRV_DIMENSION_TEXTURE2D;
+                                SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture2D;
                                 SRVDesc.Texture2D.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                             }
 
@@ -868,7 +865,7 @@ namespace Common
                     }
                     break;
 
-                case ResourceDimension.Texture3D:// D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+                case ResourceDimension.Texture3D:
                     {
                         Texture3DDescription desc = new Texture3DDescription();
 
@@ -880,14 +877,14 @@ namespace Common
                         desc.Usage = usage;
                         desc.BindFlags = bindFlags;
                         desc.CpuAccessFlags = CpuAccessFlags;
-                        desc.OptionFlags = miscFlags & ~ResourceOptionFlags.TextureCube;// ~D3D11_RESOURCE_MISC_TEXTURECUBE;
+                        desc.OptionFlags = miscFlags & ~ResourceOptionFlags.TextureCube;
                         Texture3D tex = new Texture3D(d3dDevice, desc, initData);
 
                         if (tex != null)
                         {
 
 
-                            SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture3D;// D3D11_SRV_DIMENSION_TEXTURE3D;
+                            SRVDesc.Dimension = SharpDX.Direct3D.ShaderResourceViewDimension.Texture3D;
                             SRVDesc.Texture3D.MipLevels = (mipCount == 0) ? -1 : desc.MipLevels;
                             textureView = new ShaderResourceView(d3dDevice, tex, SRVDesc);
                             if (textureView == null)
@@ -919,7 +916,7 @@ namespace Common
             CpuAccessFlags CpuAccessFlags,
             ResourceOptionFlags miscFlags,
             bool forceSRGB,
-            out SharpDX.Direct3D11.Resource texture,
+            out Resource texture,
             out ShaderResourceView textureView)
         {
             Result hr = Result.Ok;
@@ -930,7 +927,7 @@ namespace Common
             int height = header.height;
             int depth = header.depth;
 
-            ResourceDimension resDim = ResourceDimension.Unknown;// D3D11_RESOURCE_DIMENSION_UNKNOWN;
+            ResourceDimension resDim = ResourceDimension.Unknown;
             int arraySize = 1;
             Format format = Format.Unknown;
             bool isCubeMap = false;
@@ -949,7 +946,7 @@ namespace Common
                 arraySize = d3d10ext.arraySize;
                 if (arraySize == 0)
                 {
-                    return Result.Fail;// HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
+                    return Result.Fail;
                 }
 
                 switch (d3d10ext.dxgiFormat)
@@ -975,13 +972,13 @@ namespace Common
                         // D3DX writes 1D textures with a fixed Height of 1
                         if ((header.flags & DDS_HEIGHT) > 0 && height != 1)
                         {
-                            throw new NotSupportedException();// HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
+                            throw new NotSupportedException();
                         }
                         height = depth = 1;
                         break;
 
-                    case ResourceDimension.Texture2D:// D3D11_RESOURCE_DIMENSION_TEXTURE2D:
-                        if ((d3d10ext.miscFlag & ResourceOptionFlags.TextureCube) > 0)// D3D11_RESOURCE_MISC_TEXTURECUBE)
+                    case ResourceDimension.Texture2D:
+                        if ((d3d10ext.miscFlag & ResourceOptionFlags.TextureCube) > 0)
                         {
                             arraySize *= 6;
                             isCubeMap = true;
@@ -989,23 +986,20 @@ namespace Common
                         depth = 1;
                         break;
 
-                    case ResourceDimension.Texture3D:// D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+                    case ResourceDimension.Texture3D:
                         if ((header.flags & DDS_HEADER_FLAGS_VOLUME) == 0)
                         {
                             throw new ArgumentException();
-                            //return HRESULT_FROM_WIN32(ERROR_INVALID_DATA);
                         }
 
                         if (arraySize > 1)
                         {
                             throw new ArgumentException();
-                            //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                         }
                         break;
 
                     default:
                         throw new ArgumentException();
-                        //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                 }
 
                 resDim = d3d10ext.resourceDimension;
@@ -1017,12 +1011,11 @@ namespace Common
                 if (format == Format.Unknown)
                 {
                     throw new ArgumentException();
-                    //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                 }
 
                 if ((header.flags & DDS_HEADER_FLAGS_VOLUME) > 0)
                 {
-                    resDim = ResourceDimension.Texture3D;// D3D11_RESOURCE_DIMENSION_TEXTURE3D;
+                    resDim = ResourceDimension.Texture3D;
                 }
                 else
                 {
@@ -1032,7 +1025,6 @@ namespace Common
                         if ((header.caps2 & DDS_CUBEMAP_ALLFACES) != DDS_CUBEMAP_ALLFACES)
                         {
                             throw new ArgumentException();
-                            //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                         }
 
                         arraySize = 6;
@@ -1040,7 +1032,7 @@ namespace Common
                     }
 
                     depth = 1;
-                    resDim = ResourceDimension.Texture2D;// D3D11_RESOURCE_DIMENSION_TEXTURE2D;
+                    resDim = ResourceDimension.Texture2D;
 
                     // Note there's no way for a legacy Direct3D 9 DDS to express a '1D' texture
                 }
@@ -1049,52 +1041,47 @@ namespace Common
             }
 
             // Bound sizes (for security purposes we don't trust DDS file metadata larger than the Direct3D hardware requirements)
-            if (mipCount > SharpDX.Direct3D11.Resource.MaximumMipLevels)// D3D11_REQ_MIP_LEVELS)
+            if (mipCount > Resource.MaximumMipLevels)
             {
                 throw new ArgumentException();
-                //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
             }
 
             switch (resDim)
             {
                 case ResourceDimension.Texture1D:// D3D11_RESOURCE_DIMENSION_TEXTURE1D:
-                    if ((arraySize > SharpDX.Direct3D11.Resource.MaximumTexture1DArraySize) || // D3D11_REQ_TEXTURE1D_ARRAY_AXIS_DIMENSION) ||
-                        (width > SharpDX.Direct3D11.Resource.MaximumTexture1DSize))// D3D11_REQ_TEXTURE1D_U_DIMENSION))
+                    if ((arraySize > Resource.MaximumTexture1DArraySize) ||
+                        (width > Resource.MaximumTexture1DSize))
                     {
                         throw new ArgumentException();
-                        //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                     }
                     break;
 
-                case ResourceDimension.Texture2D:// D3D11_RESOURCE_DIMENSION_TEXTURE2D:
+                case ResourceDimension.Texture2D:
                     if (isCubeMap)
                     {
                         // This is the right bound because we set arraySize to (NumCubes*6) above
-                        if ((arraySize > SharpDX.Direct3D11.Resource.MaximumTexture2DArraySize) || // D3D11_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION) ||
-                            (width > SharpDX.Direct3D11.Resource.MaximumTextureCubeSize) || //  D3D11_REQ_TEXTURECUBE_DIMENSION) ||
-                            (height > SharpDX.Direct3D11.Resource.MaximumTextureCubeSize))// D3D11_REQ_TEXTURECUBE_DIMENSION))
+                        if ((arraySize > Resource.MaximumTexture2DArraySize) ||
+                            (width > Resource.MaximumTextureCubeSize) ||
+                            (height > Resource.MaximumTextureCubeSize))
                         {
                             throw new ArgumentException();
-                            //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                         }
                     }
-                    else if ((arraySize > SharpDX.Direct3D11.Resource.MaximumTexture2DArraySize) ||//  D3D11_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION) ||
-                        (width > SharpDX.Direct3D11.Resource.MaximumTexture2DSize) ||//  D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION) ||
-                        (height > SharpDX.Direct3D11.Resource.MaximumTexture2DSize))// D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION))
+                    else if ((arraySize > Resource.MaximumTexture2DArraySize) ||
+                        (width > Resource.MaximumTexture2DSize) ||
+                        (height > Resource.MaximumTexture2DSize))
                     {
                         throw new ArgumentException();
-                        //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                     }
                     break;
 
-                case ResourceDimension.Texture3D:// D3D11_RESOURCE_DIMENSION_TEXTURE3D:
+                case ResourceDimension.Texture3D:
                     if ((arraySize > 1) ||
-                        (width > SharpDX.Direct3D11.Resource.MaximumTexture3DSize) || // D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION) ||
-                        (height > SharpDX.Direct3D11.Resource.MaximumTexture3DSize) ||
-                        (depth > SharpDX.Direct3D11.Resource.MaximumTexture3DSize))
+                        (width > Resource.MaximumTexture3DSize) ||
+                        (height > Resource.MaximumTexture3DSize) ||
+                        (depth > Resource.MaximumTexture3DSize))
                     {
                         throw new ArgumentException();
-                        //return HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
                     }
                     break;
 
@@ -1123,8 +1110,7 @@ namespace Common
             if (autogen)
             {
                 // Create texture with auto-generated mipmaps
-                SharpDX.Direct3D11.Resource tex;
-                //ID3D11Resource* tex = nullptr;
+                Resource tex;
 
                 hr = CreateD3DResources(d3dDevice, resDim, width, height, depth, 0, arraySize,
                     format, usage,
@@ -1329,8 +1315,6 @@ namespace Common
             }
 
             var header = (DDS_HEADER)Marshal.PtrToStructure(ddsData + sizeofDDS_MAGIC, typeof(DDS_HEADER));
-            //auto header = reinterpret_cast <const DDS_HEADER*>(ddsData + sizeof(uint32_t));
-
             // Verify header to validate DDS file
             if (header.size != sizeofDDS_HEADER ||
                 header.ddspf.size != sizeofDDS_PIXELFORMAT)
@@ -1498,11 +1482,6 @@ namespace Common
             textureView = null;
             alphaMode = DDS_ALPHA_MODE.DDS_ALPHA_MODE_UNKNOWN;
 
-            var sizeofDDS_HEADER = Marshal.SizeOf(typeof(DDS_HEADER));
-            var sizeofDDS_MAGIC = sizeof(int);
-            var sizeofDDS_PIXELFORMAT = Marshal.SizeOf(typeof(DDS_PIXELFORMAT));
-            var sizeofDDS_HEADER_DXT10 = Marshal.SizeOf(typeof(DDS_HEADER_DXT10));
-
             if (d3dDevice == null)
                 throw new ArgumentNullException("d3dDevice");
             if (string.IsNullOrEmpty(fileName))
@@ -1553,11 +1532,6 @@ namespace Common
             texture = null;
             textureView = null;
             alphaMode = DDS_ALPHA_MODE.DDS_ALPHA_MODE_UNKNOWN;
-
-            var sizeofDDS_HEADER = Marshal.SizeOf(typeof(DDS_HEADER));
-            var sizeofDDS_MAGIC = sizeof(int);
-            var sizeofDDS_PIXELFORMAT = Marshal.SizeOf(typeof(DDS_PIXELFORMAT));
-            var sizeofDDS_HEADER_DXT10 = Marshal.SizeOf(typeof(DDS_HEADER_DXT10));
 
             if (d3dDevice == null)
                 throw new ArgumentNullException("d3dDevice");
