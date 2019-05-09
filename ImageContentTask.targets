@@ -15,7 +15,9 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio 11.0\Common7\IDE\E
     </AvailableItemName>
   </ItemGroup>
 
-  <UsingTask TaskName="Microsoft.VisualStudio.Graphics.Api.ImageContentTask" AssemblyFile="C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+  <UsingTask Condition="'$(VSInstallRoot)'!=''" TaskName="Microsoft.VisualStudio.Graphics.Api.ImageContentTask" AssemblyFile="$(VSInstallRoot)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+
+  <UsingTask Condition="'$(VSInstallRoot)'==''" TaskName="Microsoft.VisualStudio.Graphics.Api.ImageContentTask" AssemblyFile="$(MSBuildBinPath)\..\..\..\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
 
   <!-- Inject a custom target into Build by extending BuildDependsOn -->
   <PropertyGroup>

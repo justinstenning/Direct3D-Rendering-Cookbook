@@ -14,7 +14,9 @@ Original file: C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVers
     </AvailableItemName>
   </ItemGroup>
 
-  <UsingTask TaskName="Microsoft.VisualStudio.Graphics.Api.MeshContentTask" AssemblyFile="C:\Program Files (x86)\Microsoft Visual Studio $(VisualStudioVersion)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+  <UsingTask Condition="'$(VSInstallRoot)'!=''" TaskName="Microsoft.VisualStudio.Graphics.Api.MeshContentTask" AssemblyFile="$(VSInstallRoot)\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
+  
+  <UsingTask Condition="'$(VSInstallRoot)'==''" TaskName="Microsoft.VisualStudio.Graphics.Api.MeshContentTask" AssemblyFile="$(MSBuildBinPath)\..\..\..\Common7\IDE\Extensions\Microsoft\VsGraphics\Microsoft.VisualStudio.Graphics.Api.dll" />
 
   <!-- Inject a custom target into Build by extending BuildDependsOn -->
   <PropertyGroup>
