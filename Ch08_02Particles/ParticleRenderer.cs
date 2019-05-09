@@ -89,6 +89,7 @@ namespace Ch08_02Particles
         {
             this.Constants.DomainBoundsMin = new Vector3(-15, -15, 15);
             this.Constants.DomainBoundsMax = new Vector3(0, 0, 0);
+            this.Constants.Attractor = new Vector3(-1.0f, 1.0f, -50f);
         }
 
         public int ThreadsX = 128;
@@ -197,26 +198,26 @@ namespace Ch08_02Particles
             bufDesc.Usage = ResourceUsage.Staging;
             bufDesc.CpuAccessFlags = CpuAccessFlags.Read;
             particleCountStaging = ToDispose(new Buffer(device, bufDesc));
-            
+
             #endregion
 
-            //// Can initialize the initial particles on CPU as long as pass through the count for firstRun
+            // Set the starting number of particles to 0
+            context.ComputeShader.SetUnorderedAccessView(0, particleUAVs[0], 0);
+            context.ComputeShader.SetUnorderedAccessView(1, particleUAVs[1], 0);
+
+            // Can initialize the initial particles on CPU as long as pass through the count for firstRun
             //var particles = new Particle[this.Constants.MaxParticles];
             //for (var i = 0; i < particles.Length; i++)
             //{
             //    particles[i].Radius = 0.05f;
             //    particles[i].Position = random.NextVector3(this.Constants.DomainBoundsMin, this.Constants.DomainBoundsMax);
             //    particles[i].OldPosition = particles[i].Position;
-            //    particles[i].Energy = 0.2f;
+            //    particles[i].Energy = random.NextFloat(0, maxLifetime); // start with random amount of energy up to maxLifetime
             //}
-            //// Load particles into buffer
+            // Load particles into buffer
             //context.UpdateSubresource(particles, particleBuffers[1]);
-            //context.ComputeShader.SetUnorderedAccessView(0, particleUAVs[0], 0);
-            //context.ComputeShader.SetUnorderedAccessView(1, particleUAVs[1], maxParticles);
-
-            // Set the starting number of particles to 0
-            context.ComputeShader.SetUnorderedAccessView(0, particleUAVs[0], 0);
-            context.ComputeShader.SetUnorderedAccessView(1, particleUAVs[1], 0);
+            //context.ComputeShader.SetUnorderedAccessView(0, particleUAVs[0], 0); // the append buffer
+            //context.ComputeShader.SetUnorderedAccessView(1, particleUAVs[1], maxParticles); // the consume buffer
 
             // Update the ParticleConstants buffer
             context.UpdateSubresource(ref Constants, perComputeBuffer);
