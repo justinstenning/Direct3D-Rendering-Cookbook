@@ -594,10 +594,10 @@ namespace Ch08_02Particles
                     float pointY = (((2.0f * (float)e.Y) / (float)Window.ClientSize.Height) - 1.0f) * -1.0f;
                     rightMouseClick = new Vector2(pointX, pointY);
 
-                    var inverseViewProj = Matrix.Invert(Matrix.Multiply(viewMatrix, projectionMatrix));
+                    var inverseWorldViewProj = Matrix.Invert(Matrix.Multiply(worldMatrix, Matrix.Multiply(viewMatrix, projectionMatrix)));
 
-                    var far = Vector3.TransformCoordinate(new Vector3(rightMouseClick, 1f), inverseViewProj);
-                    var near = Vector3.TransformCoordinate(new Vector3(rightMouseClick, 0f), inverseViewProj);
+                    var far = Vector3.TransformCoordinate(new Vector3(rightMouseClick, 1f), inverseWorldViewProj);
+                    var near = Vector3.TransformCoordinate(new Vector3(rightMouseClick, 0f), inverseWorldViewProj);
                     //attractor.Z = 0;
                     particleSystem.Constants.Attractor = Vector3.Normalize(far - near) * 50;
                     particleSystem.UpdateConstants();
@@ -614,8 +614,16 @@ namespace Ch08_02Particles
                     lastX = e.X;
 
                     // Mouse move changes 
-                    viewMatrix *= Matrix.RotationX(-xRotate * moveFactor);
-                    viewMatrix *= Matrix.RotationY(-yRotate * moveFactor);
+                    // Rotate view (i.e. camera)
+                    //viewMatrix *= Matrix.RotationX(xRotate * moveFactor);
+                    //viewMatrix *= Matrix.RotationY(yRotate * moveFactor);
+
+                    // Rotate around origin
+                    var backup = viewMatrix.TranslationVector;
+                    viewMatrix.TranslationVector = Vector3.Zero;
+                    viewMatrix *= Matrix.RotationX(xRotate * moveFactor);
+                    viewMatrix.TranslationVector = backup;
+                    worldMatrix *= Matrix.RotationY(yRotate * moveFactor);
 
                     updateText();
                 }

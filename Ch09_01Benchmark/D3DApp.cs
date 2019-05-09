@@ -670,8 +670,16 @@ namespace Ch09_01Benchmark
                     lastX = e.X;
 
                     // Mouse move changes 
-                    viewMatrix *= Matrix.RotationX(-xRotate * moveFactor);
-                    viewMatrix *= Matrix.RotationY(-yRotate * moveFactor);
+                    // Rotate view (i.e. camera)
+                    //viewMatrix *= Matrix.RotationX(xRotate * moveFactor);
+                    //viewMatrix *= Matrix.RotationY(yRotate * moveFactor);
+
+                    // Rotate around origin
+                    var backup = viewMatrix.TranslationVector;
+                    viewMatrix.TranslationVector = Vector3.Zero;
+                    viewMatrix *= Matrix.RotationX(xRotate * moveFactor);
+                    viewMatrix.TranslationVector = backup;
+                    worldMatrix *= Matrix.RotationY(yRotate * moveFactor);
 
                     updateText();
                 }
