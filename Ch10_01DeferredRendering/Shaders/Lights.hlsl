@@ -133,16 +133,17 @@ float SpecularConservation(float power)
 float3 LightContribution(GBufferAttributes attrs, float3 V, float3 L, float3 H, float3 D, float attenuation)
 {
     float NdotL = saturate(dot(attrs.Normal, L));
-    if (NdotL <= 0) {
+    // Ensure that we still process back side of emissive textures
+	if (NdotL <= -0.00001f && attrs.Emissive.x <= 0 && attrs.Emissive.y <= 0 && attrs.Emissive.z <= 0) {
         discard;
-	return 0;
+		return 0;
     }
     float NdotH = saturate(dot(attrs.Normal, H));
     // Lambert diffuse
-    float3 diffuse = NdotL * LightParams.Color * attrs.Diffuse;// * DiffuseConservation();
+    float3 diffuse = NdotL * LightParams.Color * attrs.Diffuse * DiffuseConservation();
     // BlinnPhong specular term
     float specPower = max(attrs.SpecularPower,0.00001f);
-    float3 specular = pow(NdotH, specPower) * attrs.SpecularInt * LightParams.Color;// * SpecularConservation(specPower);
+    float3 specular = pow(NdotH, specPower) * attrs.SpecularInt * LightParams.Color * SpecularConservation(specPower);
 
     //return specular;
     //return H;//LightParams.Color * attrs.Diffuse;

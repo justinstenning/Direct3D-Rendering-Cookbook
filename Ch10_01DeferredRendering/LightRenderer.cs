@@ -314,9 +314,9 @@ namespace Ch10_01DeferredRendering
                     // Update the perLight constant buffer
                     // Calculate view space position (for frustum checks)
                     Vector3 lightDir = Vector3.Normalize(Lights[i].Direction);
-                    Vector4 viewSpaceDir = Vector3.Transform(lightDir, PerObject.View);
+                    Vector4 viewSpaceDir = Vector4.Transform(Vector3.Transform(lightDir, PerObject.World), PerObject.View);
                     light.Direction = new Vector3(viewSpaceDir.X, viewSpaceDir.Y, viewSpaceDir.Z);
-                    Vector4 viewSpacePos = Vector3.Transform(Lights[i].Position, PerObject.View);
+                    Vector4 viewSpacePos = Vector4.Transform(Vector3.Transform(Lights[i].Position, PerObject.World), PerObject.View);
                     light.Position = new Vector3(viewSpacePos.X, viewSpacePos.Y, viewSpacePos.Z);
 
                     context.UpdateSubresource(ref light, perLightBuffer);
@@ -354,7 +354,7 @@ namespace Ch10_01DeferredRendering
                             case LightType.Point:
                                 // Prepare world matrix
                                 // Ensure no abrupt light edges with +50%
-                                world.ScaleVector = Vector3.One * light.Range * 1.5f;
+                                world.ScaleVector = Vector3.One * light.Range * 2f;
                                 volume = pointLightVolume;
                                 break;
                             /* TODO: Spot light support
@@ -390,8 +390,8 @@ namespace Ch10_01DeferredRendering
                         volume.World = world;
                         // Transpose the PerObject matrices
                         var transposed = PerObject;
-                        transposed.World = volume.World;
-                        transposed.WorldViewProjection = volume.World * PerObject.ViewProjection;
+                        transposed.World = volume.World * PerObject.World;
+                        transposed.WorldViewProjection = transposed.World * PerObject.ViewProjection;
                         transposed.Transpose();
                         context.UpdateSubresource(ref transposed, PerObjectBuffer);
 

@@ -758,12 +758,17 @@ namespace Ch10_01DeferredRendering
                 {
                     var yRotate = lastX - e.X;
                     var xRotate = lastY - e.Y;
-                    lastY = e.Y;
                     lastX = e.X;
+                    lastY = e.Y;
+
 
                     // Mouse move changes 
-                    viewMatrix *= Matrix.RotationX(-xRotate * moveFactor);
-                    viewMatrix *= Matrix.RotationY(-yRotate * moveFactor);
+                    viewMatrix = viewMatrix * Matrix.RotationX(-xRotate * moveFactor);
+                    //viewMatrix = viewMatrix * Matrix.RotationY(-yRotate * moveFactor);
+
+                    worldMatrix.TranslationVector -= cameraPosition;
+                    worldMatrix = worldMatrix * Matrix.RotationY(-yRotate * moveFactor);
+                    worldMatrix.TranslationVector += cameraPosition;
 
                     updateText();
                 }
@@ -919,6 +924,9 @@ namespace Ch10_01DeferredRendering
 
                         context.PixelShader.SetConstantBuffer(0, perObjectBuffer);
 
+                        perObject.World = worldMatrix;
+                        perObject.WorldInverseTranspose = Matrix.Transpose(Matrix.Invert(perObject.World));
+                        perObject.WorldViewProjection = perObject.World * viewProjection;
                         perObject.ViewProjection = viewProjection;
                         perObject.View = viewMatrix;
                         perObject.Projection = projectionMatrix;
@@ -926,6 +934,7 @@ namespace Ch10_01DeferredRendering
                         perObject.InverseProjection = Matrix.Invert(projectionMatrix);
 
                         activeLightRenderer.Debug = gbufferIndex;
+                        //activeLightRenderer.Debug = 2;
                         activeLightRenderer.Clear(context);
                         activeLightRenderer.Frustum = new BoundingFrustum(projectionMatrix);
                         activeLightRenderer.PerObject = perObject;
